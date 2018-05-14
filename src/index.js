@@ -1,7 +1,6 @@
 import fs from 'fs';
 import _ from 'lodash';
-import yaml from 'js-yaml';
-import path from 'path';
+import getParser from './parsers';
 
 const formDiff = (conf1, conf2) => {
   const bothKeys = _.union(Object.keys(conf1), Object.keys(conf2));
@@ -21,22 +20,15 @@ const formDiff = (conf1, conf2) => {
   return _.flatten(diffArray).join('\n');
 };
 
-const parsers = {
-  '.json': JSON.parse,
-  '.yml': yaml.safeLoad,
-  '.yaml': yaml.safeLoad,
-};
 
-const genDiff = (pathToFile1, pathToFile2) => {
+export default (pathToFile1, pathToFile2) => {
   const file1 = fs.readFileSync(pathToFile1, 'utf8');
   const file2 = fs.readFileSync(pathToFile2, 'utf8');
 
-  const config1 = parsers[path.extname(pathToFile1)](file1);
-  const config2 = parsers[path.extname(pathToFile2)](file2);
+  const config1 = getParser(pathToFile1)(file1);
+  const config2 = getParser(pathToFile2)(file2);
 
   const diff = `{\n${formDiff(config1, config2)}\n}`;
 
   return diff;
 };
-
-export default genDiff;
