@@ -1,0 +1,45 @@
+{
+  "name": "gendiff-s257",
+  "version": "1.0.0",
+  "description": "Compares two configuration files and shows a difference.",
+  "main": "index.js",
+  "scripts": {
+    "test": "make lint",
+    "babel-node": "babel-node",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublishOnly": "npm run build",
+    "eslint": "eslint src/**"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fortymorgan/project-lvl2-s257.git"
+  },
+  "keywords": [
+    "gendiff"
+  ],
+  "author": "Dmitriy Zhmudikov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fortymorgan/project-lvl2-s257/issues"
+  },
+  "homepage": "https://github.com/fortymorgan/project-lvl2-s257#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.3",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.11.0"
+  },
+  "bin": {
+    "gendiff": "dist/bin/gendiff.js"
+  },
+  "dependencies": {
+    "commander": "^2.15.1"
+  }
+}
