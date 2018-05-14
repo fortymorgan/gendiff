@@ -4,11 +4,13 @@ import program from 'commander';
 import genDiff from '..';
 
 program
-  .version('1.0.0')
-  .arguments('<firstConfig> <secondConfig>')
+  .version('1.1.0')
+  .description('Compares two configuration files and shows a difference.')
+  .option('-f, --format [type]', 'Output format');
+
+program.arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
     console.log(genDiff(firstConfig, secondConfig));
-  })
-  .description('Compares two configuration files and shows a difference.')
-  .option('-f, --format [type]', 'Output format')
-  .parse(process.argv);
+  });
+
+program.parse(process.argv);
