@@ -30,6 +30,7 @@ const showDiff = (conf1, conf2) => {
 const parsers = {
   '.json': JSON.parse,
   '.yml': yaml.safeLoad,
+  '.yaml': yaml.safeLoad,
 };
 
 const genDiff = (pathToFile1, pathToFile2) => {
