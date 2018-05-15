@@ -20,13 +20,13 @@ const formDiff = (conf1, conf2) => {
     if (_.has(conf2, key)) {
       if (_.has(conf1, key)) {
         if (conf1[key] === conf2[key]) {
-          return formDiffObj(key, 'no');
+          return formDiffObj(key, 'not-changed');
         }
-        return formDiffObj(key, 'chng');
+        return formDiffObj(key, 'changed');
       }
-      return formDiffObj(key, 'add');
+      return formDiffObj(key, 'added');
     }
-    return formDiffObj(key, 'rmv');
+    return formDiffObj(key, 'removed');
   });
 };
 

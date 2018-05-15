@@ -15,13 +15,13 @@ const diffRender = (diff, spaceCount) => {
       }
 
       switch (elem.diff) {
-        case 'no':
+        case 'not-changed':
           return `${' '.repeat(repeater)}  ${elem.key}: ${(elem.prevValue instanceof Object) ? objToString(elem.prevValue, repeater) : elem.prevValue}`;
-        case 'add':
+        case 'added':
           return `${' '.repeat(repeater)}+ ${elem.key}: ${(elem.actValue instanceof Object) ? objToString(elem.actValue, repeater) : elem.actValue}`;
-        case 'rmv':
+        case 'removed':
           return `${' '.repeat(repeater)}- ${elem.key}: ${(elem.prevValue instanceof Object) ? objToString(elem.prevValue, repeater) : elem.prevValue}`;
-        case 'chng':
+        case 'changed':
           return `${' '.repeat(repeater)}- ${elem.key}: ${(elem.prevValue instanceof Object) ? objToString(elem.prevValue, repeater) : elem.prevValue}\n${' '.repeat(repeater)}+ ${elem.key}: ${(elem.actValue instanceof Object) ? objToString(elem.actValue, repeater) : elem.actValue}`;
         default:
           return 'lol';
