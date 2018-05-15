@@ -1,29 +1,36 @@
 import fs from 'fs';
 import genDiff from '../src';
 
-const resultFile = '__tests__/__fixtures__/flat/firstTestResult';
-const expectedResult = fs.readFileSync(resultFile, 'utf8');
+const flatResultFile = '__tests__/__fixtures__/flat/testResult';
+const expectedFlatResult = fs.readFileSync(flatResultFile, 'utf8');
 
-const jsonConfig1 = '__tests__/__fixtures__/flat/before.json';
-const jsonConfig2 = '__tests__/__fixtures__/flat/after.json';
+const recursiveResultFile = '__tests__/__fixtures__/recursive/testResult';
+const expectedRecursiveResult = fs.readFileSync(recursiveResultFile, 'utf8');
 
-const yamlConfig1 = '__tests__/__fixtures__/flat/before.yml';
-const yamlConfig2 = '__tests__/__fixtures__/flat/after.yml';
+const flatJsonConfig1 = '__tests__/__fixtures__/flat/before.json';
+const flatJsonConfig2 = '__tests__/__fixtures__/flat/after.json';
 
-const iniConfig1 = '__tests__/__fixtures__/flat/before.ini';
-const iniConfig2 = '__tests__/__fixtures__/flat/after.ini';
+const flatYamlConfig1 = '__tests__/__fixtures__/flat/before.yml';
+const flatYamlConfig2 = '__tests__/__fixtures__/flat/after.yml';
 
-test('Correct config json diff', () => {
-  expect(genDiff(jsonConfig1, jsonConfig2))
-    .toBe(expectedResult);
+const flatIniConfig1 = '__tests__/__fixtures__/flat/before.ini';
+const flatIniConfig2 = '__tests__/__fixtures__/flat/after.ini';
+
+const recursiveJsonConfig1 = '__tests__/__fixtures__/recursive/before.json';
+const recursiveJsonConfig2 = '__tests__/__fixtures__/recursive/after.json';
+
+test('Correct diff for flat config', () => {
+  expect(genDiff(flatJsonConfig1, flatJsonConfig2))
+    .toBe(expectedFlatResult);
+
+  expect(genDiff(flatYamlConfig1, flatYamlConfig2))
+    .toBe(expectedFlatResult);
+
+  expect(genDiff(flatIniConfig1, flatIniConfig2))
+    .toBe(expectedFlatResult);
 });
 
-test('Correct config yaml diff', () => {
-  expect(genDiff(yamlConfig1, yamlConfig2))
-    .toBe(expectedResult);
-});
-
-test('Correct config ini diff', () => {
-  expect(genDiff(iniConfig1, iniConfig2))
-    .toBe(expectedResult);
+test('Correct diff for recursive config', () => {
+  expect(genDiff(recursiveJsonConfig1, recursiveJsonConfig2))
+    .toBe(expectedRecursiveResult);
 });
