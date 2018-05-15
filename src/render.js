@@ -13,6 +13,8 @@ const standartRender = (diff) => {
     return `{\n${stringArray.join('\n')}\n${' '.repeat(repeater + visualParams.outerObjSpace)}}`;
   };
 
+  const formDiffString = (key, value, diffSign, repeater) => `${' '.repeat(repeater)}${diffSign} ${key}: ${(value instanceof Object) ? objToString(value, repeater) : value}`;
+
   const iter = (diffObj, repeater) => {
     const diffStringArr = diffObj.map((elem) => {
       if (elem.diff instanceof Array) {
