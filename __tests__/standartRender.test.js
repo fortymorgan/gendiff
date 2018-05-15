@@ -2,7 +2,7 @@ import fs from 'fs';
 import genDiff from '../src';
 
 test('Correct diff for flat config', () => {
-  const flatResultFile = '__tests__/__fixtures__/flat/testResult';
+  const flatResultFile = '__tests__/__fixtures__/flat/standartRenderTestResult';
   const expectedFlatResult = fs.readFileSync(flatResultFile, 'utf8');
 
   const flatJsonConfig1 = '__tests__/__fixtures__/flat/before.json';
@@ -25,7 +25,7 @@ test('Correct diff for flat config', () => {
 });
 
 test('Correct diff for recursive config', () => {
-  const recursiveResultFile = '__tests__/__fixtures__/recursive/testResult';
+  const recursiveResultFile = '__tests__/__fixtures__/recursive/standartRenderTestResult';
   const expectedRecursiveResult = fs.readFileSync(recursiveResultFile, 'utf8');
 
   const recursiveJsonConfig1 = '__tests__/__fixtures__/recursive/before.json';
@@ -48,7 +48,7 @@ test('Correct diff for recursive config', () => {
 });
 
 test('Correct diff for different types of flat config', () => {
-  const flatResultFile = '__tests__/__fixtures__/flat/testResult';
+  const flatResultFile = '__tests__/__fixtures__/flat/standartRenderTestResult';
   const expectedFlatResult = fs.readFileSync(flatResultFile, 'utf8');
 
   const flatJsonConfig1 = '__tests__/__fixtures__/flat/before.json';
@@ -71,7 +71,7 @@ test('Correct diff for different types of flat config', () => {
 });
 
 test('Correct diff for different types of recursive config', () => {
-  const recursiveResultFile = '__tests__/__fixtures__/recursive/testResult';
+  const recursiveResultFile = '__tests__/__fixtures__/recursive/standartRenderTestResult';
   const expectedRecursiveResult = fs.readFileSync(recursiveResultFile, 'utf8');
 
   const recursiveJsonConfig1 = '__tests__/__fixtures__/recursive/before.json';
