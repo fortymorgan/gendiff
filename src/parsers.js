@@ -9,4 +9,12 @@ const parsers = {
   '.ini': ini.parse,
 };
 
-export default pathToFile => parsers[path.extname(pathToFile)];
+export default (pathToFile) => {
+  const format = path.extname(pathToFile);
+  const parser = parsers[format];
+
+  if (!parser) {
+    throw new Error(`unkown format: ${format}`);
+  }
+  return parser;
+};
