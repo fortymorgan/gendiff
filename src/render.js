@@ -21,18 +21,14 @@ const standartRender = (diff) => {
         return `${' '.repeat(repeater)}  ${elem.key}: {\n${iter(elem.diff, repeater + visualParams.innerObjSpace)}\n${' '.repeat(repeater + visualParams.outerObjSpace)}}`;
       }
 
-      switch (elem.diff) {
-        case 'not-changed':
-          return `${' '.repeat(repeater)}  ${elem.key}: ${(elem.prevValue instanceof Object) ? objToString(elem.prevValue, repeater) : elem.prevValue}`;
-        case 'added':
-          return `${' '.repeat(repeater)}+ ${elem.key}: ${(elem.actValue instanceof Object) ? objToString(elem.actValue, repeater) : elem.actValue}`;
-        case 'removed':
-          return `${' '.repeat(repeater)}- ${elem.key}: ${(elem.prevValue instanceof Object) ? objToString(elem.prevValue, repeater) : elem.prevValue}`;
-        case 'changed':
-          return `${' '.repeat(repeater)}- ${elem.key}: ${(elem.prevValue instanceof Object) ? objToString(elem.prevValue, repeater) : elem.prevValue}\n${' '.repeat(repeater)}+ ${elem.key}: ${(elem.actValue instanceof Object) ? objToString(elem.actValue, repeater) : elem.actValue}`;
-        default:
-          return 'lol';
-      }
+      const diffString = {
+        'not-changed': formDiffString(elem.key, elem.prevValue, ' ', repeater),
+        added: formDiffString(elem.key, elem.actValue, '+', repeater),
+        removed: formDiffString(elem.key, elem.prevValue, '-', repeater),
+        changed: `${formDiffString(elem.key, elem.prevValue, '-', repeater)}\n${formDiffString(elem.key, elem.actValue, '+', repeater)}`,
+      };
+
+      return diffString[elem.diff];
     });
     return diffStringArr.join('\n');
   };
