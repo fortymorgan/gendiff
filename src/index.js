@@ -1,25 +1,34 @@
 import fs from 'fs';
 import _ from 'lodash';
 import getParser from './parsers';
+import render from './render';
 
 const formDiff = (conf1, conf2) => {
+  const formDiffObj = (key, diff) => ({
+    key,
+    diff,
+    prevValue: conf1[key],
+    actValue: conf2[key],
+  });
+
   const bothKeys = _.union(Object.keys(conf1), Object.keys(conf2));
-  const diffArray = bothKeys.map((key) => {
+  return bothKeys.map((key) => {
+    if ((conf1[key] instanceof Object) && (conf2[key] instanceof Object)) {
+      return formDiffObj(key, formDiff(conf1[key], conf2[key]));
+    }
+
     if (_.has(conf2, key)) {
       if (_.has(conf1, key)) {
         if (conf1[key] === conf2[key]) {
-          return `    ${key}: ${conf2[key]}`;
+          return formDiffObj(key, 'no');
         }
-        return [`  + ${key}: ${conf2[key]}`, `  - ${key}: ${conf1[key]}`];
+        return formDiffObj(key, 'chng');
       }
-      return `  + ${key}: ${conf2[key]}`;
+      return formDiffObj(key, 'add');
     }
-    return `  - ${key}: ${conf1[key]}`;
+    return formDiffObj(key, 'rmv');
   });
-
-  return _.flatten(diffArray).join('\n');
 };
-
 
 export default (pathToFile1, pathToFile2) => {
   const file1 = fs.readFileSync(pathToFile1, 'utf8');
@@ -28,7 +37,8 @@ export default (pathToFile1, pathToFile2) => {
   const config1 = getParser(pathToFile1)(file1);
   const config2 = getParser(pathToFile2)(file2);
 
-  const diff = `{\n${formDiff(config1, config2)}\n}`;
+  const diff = formDiff(config1, config2);
+  const diffString = render(diff, 2);
 
-  return diff;
+  return diffString;
 };
