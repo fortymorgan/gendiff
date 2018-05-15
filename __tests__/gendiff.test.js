@@ -1,17 +1,17 @@
 import fs from 'fs';
 import genDiff from '../src';
 
-const resultFile = '__tests__/__fixtures__/firstTestResult';
+const resultFile = '__tests__/__fixtures__/flat/firstTestResult';
 const expectedResult = fs.readFileSync(resultFile, 'utf8');
 
-const jsonConfig1 = '__tests__/__fixtures__/before.json';
-const jsonConfig2 = '__tests__/__fixtures__/after.json';
+const jsonConfig1 = '__tests__/__fixtures__/flat/before.json';
+const jsonConfig2 = '__tests__/__fixtures__/flat/after.json';
 
-const yamlConfig1 = '__tests__/__fixtures__/before.yml';
-const yamlConfig2 = '__tests__/__fixtures__/after.yml';
+const yamlConfig1 = '__tests__/__fixtures__/flat/before.yml';
+const yamlConfig2 = '__tests__/__fixtures__/flat/after.yml';
 
-const iniConfig1 = '__tests__/__fixtures__/before.ini';
-const iniConfig2 = '__tests__/__fixtures__/after.ini';
+const iniConfig1 = '__tests__/__fixtures__/flat/before.ini';
+const iniConfig2 = '__tests__/__fixtures__/flat/after.ini';
 
 test('Correct config json diff', () => {
   expect(genDiff(jsonConfig1, jsonConfig2))
