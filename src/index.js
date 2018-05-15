@@ -1,7 +1,7 @@
 import fs from 'fs';
 import _ from 'lodash';
 import getParser from './parsers';
-import render from './render';
+import renderers from './render';
 
 const formDiff = (conf1, conf2) => {
   const formDiffObj = (key, diff) => ({
@@ -30,7 +30,7 @@ const formDiff = (conf1, conf2) => {
   });
 };
 
-export default (pathToFile1, pathToFile2) => {
+export default (pathToFile1, pathToFile2, renderType = 'standart') => {
   const file1 = fs.readFileSync(pathToFile1, 'utf8');
   const file2 = fs.readFileSync(pathToFile2, 'utf8');
 
@@ -38,7 +38,7 @@ export default (pathToFile1, pathToFile2) => {
   const config2 = getParser(pathToFile2)(file2);
 
   const diff = formDiff(config1, config2);
-  const diffString = render(diff, 2);
+  const diffString = renderers[renderType](diff, 2);
 
   return diffString;
 };
