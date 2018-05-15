@@ -19,6 +19,9 @@ const flatIniConfig2 = '__tests__/__fixtures__/flat/after.ini';
 const recursiveJsonConfig1 = '__tests__/__fixtures__/recursive/before.json';
 const recursiveJsonConfig2 = '__tests__/__fixtures__/recursive/after.json';
 
+const recursiveYamlConfig1 = '__tests__/__fixtures__/recursive/before.yml';
+const recursiveYamlConfig2 = '__tests__/__fixtures__/recursive/after.yml';
+
 test('Correct diff for flat config', () => {
   expect(genDiff(flatJsonConfig1, flatJsonConfig2))
     .toBe(expectedFlatResult);
@@ -32,5 +35,8 @@ test('Correct diff for flat config', () => {
 
 test('Correct diff for recursive config', () => {
   expect(genDiff(recursiveJsonConfig1, recursiveJsonConfig2))
+    .toBe(expectedRecursiveResult);
+
+  expect(genDiff(recursiveYamlConfig1, recursiveYamlConfig2))
     .toBe(expectedRecursiveResult);
 });
