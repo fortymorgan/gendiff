@@ -1,42 +1,35 @@
 import _ from 'lodash';
 
-const standartRender = (diff) => {
-  const visualParams = {
-    innerObjSpace: 4,
-    outerObjSpace: 2,
-    spaceCount: 2,
-  };
+const visualParams = {
+  innerObjSpace: 4,
+  outerObjSpace: 2,
+  spaceCount: 2,
+};
 
-  const stringify = (diffObject, spaceCount) => {
-    if (diffObject.diff instanceof Array) {
-      const innerDiffArr = diffObject.diff.map(elem =>
-        stringify(elem, spaceCount + visualParams.innerObjSpace));
+const objToString = (object, spaceCount) => {
+  const keys = Object.keys(object);
+  const stringArray = keys.map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${object[key]}`);
+  return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
+};
 
-      const innerDiffFlat = _.flatten(innerDiffArr);
-
-      return `${' '.repeat(spaceCount)}  ${diffObject.key}: {\n${innerDiffFlat.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
-    }
-
-    const objToString = (object) => {
-      const keys = Object.keys(object);
-      const stringArray = keys.map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${object[key]}`);
-      return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
-    };
-
-    const formDiffString = (value, diffSign) => `${' '.repeat(spaceCount)}${diffSign} ${diffObject.key}: ${(value instanceof Object) ? objToString(value) : value}`;
+const standartRender = (diff, spaceCount = visualParams.spaceCount) => {
+  const stringify = (diffElem) => {
+    const formDiffString = (value, diffSign) => `${' '.repeat(spaceCount)}${diffSign} ${diffElem.key}: ${_.isObject(value) ? objToString(value, spaceCount) : value}`;
 
     const diffString = {
-      'not-changed': formDiffString(diffObject.prevValue, ' '),
-      added: formDiffString(diffObject.actValue, '+'),
-      removed: formDiffString(diffObject.prevValue, '-'),
-      changed: [formDiffString(diffObject.prevValue, '-'), formDiffString(diffObject.actValue, '+')],
+      nested: value => formDiffString(standartRender(value, spaceCount + visualParams.innerObjSpace), ' '),
+      'not changed': value => formDiffString(value, ' '),
+      changed: value => [formDiffString(value.old, '-'), formDiffString(value.new, '+')],
+      deleted: value => formDiffString(value, '-'),
+      inserted: value => formDiffString(value, '+'),
     };
-    return diffString[diffObject.diff];
+
+    return diffString[diffElem.type](diffElem.value);
   };
 
-  const diffStringArr = diff.map(elem => stringify(elem, visualParams.spaceCount));
-  const diffFlatArr = _.flatten(diffStringArr);
-  return `{\n${diffFlatArr.join('\n')}\n}`;
+  const diffStringArray = diff.map(diffElem => stringify(diffElem));
+  const diffFlatArr = _.flatten(diffStringArray);
+  return `{\n${diffFlatArr.join('\n')}\n${' '.repeat(spaceCount - visualParams.outerObjSpace)}}`;
 };
 
 export default standartRender;

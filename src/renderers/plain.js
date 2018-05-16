@@ -1,34 +1,31 @@
 import _ from 'lodash';
 
-const plainRender = (diff) => {
-  const stringify = (diffObj, acc) => {
-    const diffStringArr = diffObj.map((elem) => {
-      if (elem.diff instanceof Array) {
-        return stringify(elem.diff, [...acc, elem.key]);
-      }
+const generateBeginOfString = key => `Property '${key.join('.')}' was `;
 
-      const chooseValueString = (value, sample) => {
-        const samples = {
-          simple: `'${value}'`,
-          withWord: `value: '${value}'`,
-        };
-        return (value instanceof Object) ? 'complex value' : samples[sample];
-      };
-
-      const generateBeginOfString = key => `Property '${[...acc, key].join('.')}' was `;
-
-      const diffString = {
-        'not-changed': 'Not changed',
-        added: `${generateBeginOfString(elem.key)}added with ${chooseValueString(elem.actValue, 'withWord')}`,
-        removed: `${generateBeginOfString(elem.key)}removed`,
-        changed: `${generateBeginOfString(elem.key)}updated. From ${chooseValueString(elem.prevValue, 'simple')} to ${chooseValueString(elem.actValue, 'simple')}`,
-      };
-      return diffString[elem.diff];
-    });
-    return diffStringArr.filter(item => item !== 'Not changed');
+const chooseValueString = (value, sample) => {
+  const samples = {
+    simple: `'${value}'`,
+    withWord: `value: '${value}'`,
   };
-  const result = stringify(diff, []);
-  return _.flattenDeep(result).join('\n');
+  return _.isObject(value) ? 'complex value' : samples[sample];
+};
+
+const plainRender = (diff, acc = []) => {
+  const stringify = (diffElem) => {
+    const diffString = {
+      nested: value => plainRender(value, [...acc, diffElem.key]),
+      'not changed': () => 'Not changed',
+      changed: value => `${generateBeginOfString([...acc, diffElem.key])}updated. From ${chooseValueString(value.old, 'simple')} to ${chooseValueString(value.new, 'simple')}`,
+      deleted: () => `${generateBeginOfString([...acc, diffElem.key])}removed`,
+      inserted: value => `${generateBeginOfString([...acc, diffElem.key])}added with ${chooseValueString(value, 'withWord')}`,
+    };
+    return diffString[diffElem.type](diffElem.value);
+  };
+
+  const diffStringArray = diff
+    .map(diffElem => stringify(diffElem))
+    .filter(item => item !== 'Not changed');
+  return diffStringArray.join('\n');
 };
 
 export default plainRender;
