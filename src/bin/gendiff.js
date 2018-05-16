@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import program from 'commander';
-import genDiff from '..';
+import genearateDiff from '..';
 
 program
   .version('1.5.5', '-v, --version')
@@ -9,6 +9,6 @@ program
   .option('-f, --format [type]', 'Output format')
   .arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
-    console.log(genDiff(firstConfig, secondConfig, program.format));
+    console.log(genearateDiff(firstConfig, secondConfig, program.format));
   })
   .parse(process.argv);
