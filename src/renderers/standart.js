@@ -11,7 +11,9 @@ const standartRender = (diff) => {
     if (diffObject.diff instanceof Array) {
       const innerDiffArr = diffObject.diff.map(elem =>
         stringify(elem, spaceCount + visualParams.innerObjSpace));
+
       const innerDiffFlat = _.flatten(innerDiffArr);
+
       return `${' '.repeat(spaceCount)}  ${diffObject.key}: {\n${innerDiffFlat.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
     }
 
