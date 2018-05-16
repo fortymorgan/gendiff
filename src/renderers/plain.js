@@ -1,28 +1,33 @@
 import _ from 'lodash';
 
 const plainRender = (diff) => {
-  const iter = (diffObj, acc) => {
+  const stringify = (diffObj, acc) => {
     const diffStringArr = diffObj.map((elem) => {
       if (elem.diff instanceof Array) {
-        return iter(elem.diff, [...acc, elem.key]);
+        return stringify(elem.diff, [...acc, elem.key]);
       }
 
-      switch (elem.diff) {
-        case 'not-changed':
-          return 'Not changed';
-        case 'added':
-          return `Property '${[...acc, elem.key].join('.')}' was added with ${(elem.actValue instanceof Object) ? 'complex value' : `value: '${elem.actValue}'`}`;
-        case 'removed':
-          return `Property '${[...acc, elem.key].join('.')}' was removed`;
-        case 'changed':
-          return `Property '${[...acc, elem.key].join('.')}' was updated. From ${(elem.prevValue instanceof Object) ? 'complex value' : `'${elem.prevValue}'`} to ${(elem.actValue instanceof Object) ? 'complex value' : `'${elem.actValue}'`}`;
-        default:
-          return 'lol';
-      }
+      const chooseValueString = (value, sample) => {
+        const samples = {
+          simple: `'${value}'`,
+          withWord: `value: '${value}'`,
+        };
+        return (value instanceof Object) ? 'complex value' : samples[sample];
+      };
+
+      const generateBeginOfString = key => `Property '${[...acc, key].join('.')}' was `;
+
+      const diffString = {
+        'not-changed': 'Not changed',
+        added: `${generateBeginOfString(elem.key)}added with ${chooseValueString(elem.actValue, 'withWord')}`,
+        removed: `${generateBeginOfString(elem.key)}removed`,
+        changed: `${generateBeginOfString(elem.key)}updated. From ${chooseValueString(elem.prevValue, 'simple')} to ${chooseValueString(elem.actValue, 'simple')}`,
+      };
+      return diffString[elem.diff];
     });
     return diffStringArr.filter(item => item !== 'Not changed');
   };
-  const result = iter(diff, []);
+  const result = stringify(diff, []);
   return _.flattenDeep(result).join('\n');
 };
 
