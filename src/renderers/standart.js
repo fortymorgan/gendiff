@@ -13,7 +13,7 @@ const objToString = (object, spaceCount) => {
 };
 
 const standartRender = (diff, spaceCount = visualParams.spaceCount) => {
-  const stringify = (diffElem) => {
+  const diffToString = (diffElem) => {
     const formDiffString = (value, diffSign) => `${' '.repeat(spaceCount)}${diffSign} ${diffElem.key}: ${_.isObject(value) ? objToString(value, spaceCount) : value}`;
 
     const diffString = {
@@ -27,7 +27,7 @@ const standartRender = (diff, spaceCount = visualParams.spaceCount) => {
     return diffString[diffElem.type](diffElem.value);
   };
 
-  const diffStringArray = diff.map(diffElem => stringify(diffElem));
+  const diffStringArray = diff.map(diffElem => diffToString(diffElem));
   const diffFlatArr = _.flatten(diffStringArray);
   return `{\n${diffFlatArr.join('\n')}\n${' '.repeat(spaceCount - visualParams.outerObjSpace)}}`;
 };

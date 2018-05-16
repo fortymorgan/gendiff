@@ -11,7 +11,7 @@ const chooseValueString = (value, sample) => {
 };
 
 const plainRender = (diff, acc = []) => {
-  const stringify = (diffElem) => {
+  const diffToString = (diffElem) => {
     const diffString = {
       nested: value => plainRender(value, [...acc, diffElem.key]),
       'not changed': () => 'Not changed',
@@ -23,7 +23,7 @@ const plainRender = (diff, acc = []) => {
   };
 
   const diffStringArray = diff
-    .map(diffElem => stringify(diffElem))
+    .map(diffElem => diffToString(diffElem))
     .filter(item => item !== 'Not changed');
   return diffStringArray.join('\n');
 };
