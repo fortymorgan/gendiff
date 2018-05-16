@@ -6,15 +6,18 @@ const visualParams = {
   spaceCount: 2,
 };
 
-const objToString = (object, spaceCount) => {
-  const keys = Object.keys(object);
-  const stringArray = keys.map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${object[key]}`);
-  return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
+const stringify = (value, spaceCount) => {
+  if (_.isObject(value)) {
+    const keys = Object.keys(value);
+    const stringArray = keys.map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${value[key]}`);
+    return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
+  }
+  return value;
 };
 
 const standartRender = (diff, spaceCount = visualParams.spaceCount) => {
   const diffToString = (diffElem) => {
-    const formDiffString = (value, diffSign) => `${' '.repeat(spaceCount)}${diffSign} ${diffElem.key}: ${_.isObject(value) ? objToString(value, spaceCount) : value}`;
+    const formDiffString = (value, diffSign) => `${' '.repeat(spaceCount)}${diffSign} ${diffElem.key}: ${stringify(value, spaceCount)}`;
 
     const diffString = {
       nested: value => formDiffString(standartRender(value, spaceCount + visualParams.innerObjSpace), ' '),
