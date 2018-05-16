@@ -8,7 +8,7 @@ const visualParams = {
 
 const stringify = (value, spaceCount) => {
   if (_.isObject(value)) {
-    const keys = Object.keys(value);
+    const keys = _.keys(value);
     const stringArray = keys.map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${value[key]}`);
     return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
   }

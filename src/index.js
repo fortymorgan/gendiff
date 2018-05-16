@@ -6,8 +6,7 @@ import renderers from './renderers';
 const diffTypes = [
   {
     type: 'nested',
-    check: (first, second, key) =>
-      (first[key] instanceof Object) && (second[key] instanceof Object),
+    check: (first, second, key) => _.isObject(first[key]) && _.isObject(second[key]),
     process: (first, second, func) => func(first, second),
   },
   {
@@ -35,7 +34,7 @@ const diffTypes = [
 ];
 
 const getDiff = (firstConfig = {}, secondConfig = {}) => {
-  const bothKeys = _.union(Object.keys(firstConfig), Object.keys(secondConfig));
+  const bothKeys = _.union(_.keys(firstConfig), _.keys(secondConfig));
   return bothKeys.map((key) => {
     const { type, process } = _.find(diffTypes, item => item.check(firstConfig, secondConfig, key));
     const value = process(firstConfig[key], secondConfig[key], getDiff);
