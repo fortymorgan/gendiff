@@ -1,7 +1,7 @@
 import fs from 'fs';
 import _ from 'lodash';
 import getParser from './parsers';
-import renderers from './render';
+import renderers from './renderers';
 
 const formDiff = (conf1, conf2) => {
   const formDiffObj = (key, diff) => ({
