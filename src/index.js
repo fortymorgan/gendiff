@@ -3,33 +3,6 @@ import _ from 'lodash';
 import getParser from './parsers';
 import renderers from './renderers';
 
-// const formDiff = (conf1, conf2) => {
-//   const formDiffObj = (key, diff) => ({
-//     key,
-//     diff,
-//     prevValue: conf1[key],
-//     actValue: conf2[key],
-//   });
-
-//   const bothKeys = _.union(Object.keys(conf1), Object.keys(conf2));
-//   return bothKeys.map((key) => {
-//     if ((conf1[key] instanceof Object) && (conf2[key] instanceof Object)) {
-//       return formDiffObj(key, formDiff(conf1[key], conf2[key]));
-//     }
-
-//     if (_.has(conf2, key)) {
-//       if (_.has(conf1, key)) {
-//         if (conf1[key] === conf2[key]) {
-//           return formDiffObj(key, 'not-changed');
-//         }
-//         return formDiffObj(key, 'changed');
-//       }
-//       return formDiffObj(key, 'added');
-//     }
-//     return formDiffObj(key, 'removed');
-//   });
-// };
-
 const diffTypes = [
   {
     type: 'nested',
