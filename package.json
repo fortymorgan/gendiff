@@ -3,6 +3,9 @@
   "version": "1.6.0",
   "description": "Compares two configuration files and shows a difference.",
   "main": "index.js",
+  "jest": {
+    "testPathIgnorePatterns": ["pathsAndResults"]
+  },
   "scripts": {
     "test": "jest",
     "babel-node": "babel-node",
