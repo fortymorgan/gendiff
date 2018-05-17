@@ -20,14 +20,14 @@ const standartRender = (diff, spaceCount = visualParams.spaceCount) => {
     const formDiffString = (value, diffSign) => `${' '.repeat(spaceCount)}${diffSign} ${diffElem.key}: ${stringify(value, spaceCount)}`;
 
     const diffString = {
-      nested: value => formDiffString(standartRender(value, spaceCount + visualParams.innerObjSpace), ' '),
+      nested: children => formDiffString(standartRender(children, spaceCount + visualParams.innerObjSpace), ' '),
       'not changed': value => formDiffString(value, ' '),
       changed: value => [formDiffString(value.oldValue, '-'), formDiffString(value.newValue, '+')],
       deleted: value => formDiffString(value, '-'),
       inserted: value => formDiffString(value, '+'),
     };
 
-    return diffString[diffElem.type](diffElem.value);
+    return diffElem.type === 'nested' ? diffString.nested(diffElem.children) : diffString[diffElem.type](diffElem.value);
   };
 
   const diffStringArray = diff.map(diffElem => diffToString(diffElem));

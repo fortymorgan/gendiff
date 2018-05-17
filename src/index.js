@@ -6,30 +6,33 @@ import renderers from './renderers';
 const diffTypes = [
   {
     type: 'nested',
-    check: (first, second, key) => _.isObject(first[key]) && _.isObject(second[key]),
-    process: (first, second, func) => func(first, second),
+    check: (firstConfig, secondConfig, key) =>
+      _.isObject(firstConfig[key]) && _.isObject(secondConfig[key]),
+    process: (firstConfig, secondConfig, func) => func(firstConfig, secondConfig),
   },
   {
     type: 'not changed',
-    check: (first, second, key) => (_.has(first, key) && _.has(second, key)
-      && (first[key] === second[key])),
+    check: (firstConfig, secondConfig, key) => (_.has(firstConfig, key) && _.has(secondConfig, key)
+      && (firstConfig[key] === secondConfig[key])),
     process: _.identity,
   },
   {
     type: 'changed',
-    check: (first, second, key) => (_.has(first, key) && _.has(second, key)
-      && (first[key] !== second[key])),
-    process: (first, second) => ({ oldValue: first, newValue: second }),
+    check: (firstConfig, secondConfig, key) => (_.has(firstConfig, key) && _.has(secondConfig, key)
+      && (firstConfig[key] !== secondConfig[key])),
+    process: (firstConfig, secondConfig) => ({ oldValue: firstConfig, newValue: secondConfig }),
   },
   {
     type: 'deleted',
-    check: (first, second, key) => (_.has(first, key) && !_.has(second, key)),
+    check: (firstConfig, secondConfig, key) =>
+      (_.has(firstConfig, key) && !_.has(secondConfig, key)),
     process: _.identity,
   },
   {
     type: 'inserted',
-    check: (first, second, key) => (!_.has(first, key) && _.has(second, key)),
-    process: (first, second) => second,
+    check: (firstConfig, secondConfig, key) =>
+      (!_.has(firstConfig, key) && _.has(secondConfig, key)),
+    process: (firstConfig, secondConfig) => secondConfig,
   },
 ];
 
@@ -37,7 +40,11 @@ const getDiff = (firstConfig = {}, secondConfig = {}) => {
   const bothKeys = _.union(_.keys(firstConfig), _.keys(secondConfig));
   return bothKeys.map((key) => {
     const { type, process } = _.find(diffTypes, item => item.check(firstConfig, secondConfig, key));
-    const value = process(firstConfig[key], secondConfig[key], getDiff);
+    if (type === 'nested') {
+      const children = process(firstConfig[key], secondConfig[key], getDiff);
+      return { key, type, children };
+    }
+    const value = process(firstConfig[key], secondConfig[key]);
     return { key, type, value };
   });
 };

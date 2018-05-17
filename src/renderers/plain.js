@@ -13,13 +13,12 @@ const chooseValueString = (value, sample) => {
 const plainRender = (diff, acc = []) => {
   const diffToString = (diffElem) => {
     const diffString = {
-      nested: value => plainRender(value, [...acc, diffElem.key]),
       'not changed': () => 'Not changed',
       changed: value => `${generateBeginOfString([...acc, diffElem.key])}updated. From ${chooseValueString(value.oldValue, 'simple')} to ${chooseValueString(value.newValue, 'simple')}`,
       deleted: () => `${generateBeginOfString([...acc, diffElem.key])}removed`,
       inserted: value => `${generateBeginOfString([...acc, diffElem.key])}added with ${chooseValueString(value, 'withWord')}`,
     };
-    return diffString[diffElem.type](diffElem.value);
+    return diffElem.type === 'nested' ? plainRender(diffElem.children, [...acc, diffElem.key]) : diffString[diffElem.type](diffElem.value);
   };
 
   const diffStringArray = diff
