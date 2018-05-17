@@ -8,31 +8,32 @@ const diffTypes = [
     type: 'nested',
     check: (firstConfig, secondConfig, key) =>
       _.isObject(firstConfig[key]) && _.isObject(secondConfig[key]),
-    process: (firstConfig, secondConfig, func) => func(firstConfig, secondConfig),
+    process: (firstConfig, secondConfig, func) => ({ children: func(firstConfig, secondConfig) }),
   },
   {
     type: 'not changed',
     check: (firstConfig, secondConfig, key) => (_.has(firstConfig, key) && _.has(secondConfig, key)
       && (firstConfig[key] === secondConfig[key])),
-    process: _.identity,
+    process: firstConfig => ({ value: firstConfig }),
   },
   {
     type: 'changed',
     check: (firstConfig, secondConfig, key) => (_.has(firstConfig, key) && _.has(secondConfig, key)
       && (firstConfig[key] !== secondConfig[key])),
-    process: (firstConfig, secondConfig) => ({ oldValue: firstConfig, newValue: secondConfig }),
+    process: (firstConfig, secondConfig) =>
+      ({ value: { oldValue: firstConfig, newValue: secondConfig } }),
   },
   {
     type: 'deleted',
     check: (firstConfig, secondConfig, key) =>
       (_.has(firstConfig, key) && !_.has(secondConfig, key)),
-    process: _.identity,
+    process: firstConfig => ({ value: firstConfig }),
   },
   {
     type: 'inserted',
     check: (firstConfig, secondConfig, key) =>
       (!_.has(firstConfig, key) && _.has(secondConfig, key)),
-    process: (firstConfig, secondConfig) => secondConfig,
+    process: (firstConfig, secondConfig) => ({ value: secondConfig }),
   },
 ];
 
@@ -40,12 +41,7 @@ const getDiff = (firstConfig = {}, secondConfig = {}) => {
   const bothKeys = _.union(_.keys(firstConfig), _.keys(secondConfig));
   return bothKeys.map((key) => {
     const { type, process } = _.find(diffTypes, item => item.check(firstConfig, secondConfig, key));
-    if (type === 'nested') {
-      const children = process(firstConfig[key], secondConfig[key], getDiff);
-      return { key, type, children };
-    }
-    const value = process(firstConfig[key], secondConfig[key]);
-    return { key, type, value };
+    return { key, type, ...process(firstConfig[key], secondConfig[key], getDiff) };
   });
 };
 
