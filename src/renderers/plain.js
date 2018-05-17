@@ -15,7 +15,7 @@ const plainRender = (diff, acc = []) => {
     const diffString = {
       nested: value => plainRender(value, [...acc, diffElem.key]),
       'not changed': () => 'Not changed',
-      changed: value => `${generateBeginOfString([...acc, diffElem.key])}updated. From ${chooseValueString(value.old, 'simple')} to ${chooseValueString(value.new, 'simple')}`,
+      changed: value => `${generateBeginOfString([...acc, diffElem.key])}updated. From ${chooseValueString(value.oldValue, 'simple')} to ${chooseValueString(value.newValue, 'simple')}`,
       deleted: () => `${generateBeginOfString([...acc, diffElem.key])}removed`,
       inserted: value => `${generateBeginOfString([...acc, diffElem.key])}added with ${chooseValueString(value, 'withWord')}`,
     };

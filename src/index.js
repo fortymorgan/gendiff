@@ -19,7 +19,7 @@ const diffTypes = [
     type: 'changed',
     check: (first, second, key) => (_.has(first, key) && _.has(second, key)
       && (first[key] !== second[key])),
-    process: (first, second) => ({ old: first, new: second }),
+    process: (first, second) => ({ oldValue: first, newValue: second }),
   },
   {
     type: 'deleted',

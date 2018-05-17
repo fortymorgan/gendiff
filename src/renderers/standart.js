@@ -22,7 +22,7 @@ const standartRender = (diff, spaceCount = visualParams.spaceCount) => {
     const diffString = {
       nested: value => formDiffString(standartRender(value, spaceCount + visualParams.innerObjSpace), ' '),
       'not changed': value => formDiffString(value, ' '),
-      changed: value => [formDiffString(value.old, '-'), formDiffString(value.new, '+')],
+      changed: value => [formDiffString(value.oldValue, '-'), formDiffString(value.newValue, '+')],
       deleted: value => formDiffString(value, '-'),
       inserted: value => formDiffString(value, '+'),
     };
