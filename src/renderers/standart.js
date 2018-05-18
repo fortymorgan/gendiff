@@ -11,11 +11,12 @@ const stringify = (value, spaceCount) => {
     return value;
   }
   const keys = _.keys(value);
-  const stringArray = keys.map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${value[key]}`);
+  const stringArray = keys
+    .map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${value[key]}`);
   return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
 };
 
-const standartRender = (diff, parentName = '', spaceCount = visualParams.spaceCount) => {
+const render = (diff, parentName = '', spaceCount = visualParams.spaceCount) => {
   const diffToString = (diffElem) => {
     const formDiffString = (value, diffSign) => {
       const valueString = stringify(value, spaceCount);
@@ -26,7 +27,7 @@ const standartRender = (diff, parentName = '', spaceCount = visualParams.spaceCo
       nested: (diffNode) => {
         const newParentName = `${' '.repeat(spaceCount)}  ${diffNode.key}: `;
         const newSpaceCount = spaceCount + visualParams.innerObjSpace;
-        return standartRender(diffNode.children, newParentName, newSpaceCount);
+        return render(diffNode.children, newParentName, newSpaceCount);
       },
       'not changed': diffNode => formDiffString(diffNode.value, ' '),
       changed: diffNode => [formDiffString(diffNode.value.oldValue, '-'),
@@ -43,4 +44,4 @@ const standartRender = (diff, parentName = '', spaceCount = visualParams.spaceCo
   return `${parentName}{\n${diffFlatArr.join('\n')}\n${' '.repeat(spaceCount - visualParams.outerObjSpace)}}`;
 };
 
-export default standartRender;
+export default render;

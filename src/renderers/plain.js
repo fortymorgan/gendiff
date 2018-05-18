@@ -10,10 +10,10 @@ const chooseValueString = (value, sample) => {
   return _.isObject(value) ? 'complex value' : samples[sample];
 };
 
-const plainRender = (diff, acc = []) => {
+const render = (diff, acc = []) => {
   const diffToString = (diffElem) => {
     const diffString = {
-      nested: diffNode => plainRender(diffNode.children, [...acc, diffNode.key]),
+      nested: diffNode => render(diffNode.children, [...acc, diffNode.key]),
       'not changed': () => 'Not changed',
       changed: diffNode => `${generateBeginOfString([...acc, diffNode.key])}updated. From ${chooseValueString(diffNode.value.oldValue, 'simple')} to ${chooseValueString(diffNode.value.newValue, 'simple')}`,
       deleted: diffNode => `${generateBeginOfString([...acc, diffNode.key])}removed`,
@@ -28,4 +28,4 @@ const plainRender = (diff, acc = []) => {
   return diffStringArray.join('\n');
 };
 
-export default plainRender;
+export default render;
