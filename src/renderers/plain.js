@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const generateBeginOfString = key => `Property '${key.join('.')}' was `;
+const generateBeginOfString = key => `Property '${key}' was `;
 
 const chooseValueString = (value, sample) => {
   const samples = {
@@ -12,19 +12,32 @@ const chooseValueString = (value, sample) => {
 
 const render = (diff, acc = []) => {
   const diffToString = (diffElem) => {
+    const keyAcc = [...acc, diffElem.key];
+    const keyString = keyAcc.join('.');
     const diffString = {
-      nested: diffNode => render(diffNode.children, [...acc, diffNode.key]),
-      'not changed': () => 'Not changed',
-      changed: diffNode => `${generateBeginOfString([...acc, diffNode.key])}updated. From ${chooseValueString(diffNode.oldValue, 'simple')} to ${chooseValueString(diffNode.newValue, 'simple')}`,
-      deleted: diffNode => `${generateBeginOfString([...acc, diffNode.key])}removed`,
-      inserted: diffNode => `${generateBeginOfString([...acc, diffNode.key])}added with ${chooseValueString(diffNode.value, 'withWord')}`,
+      nested: diffNode => render(diffNode.children, keyAcc),
+      changed: (diffNode) => {
+        const beginOfString = generateBeginOfString(keyString);
+        const oldValueString = chooseValueString(diffNode.oldValue, 'simple');
+        const newValueString = chooseValueString(diffNode.newValue, 'simple');
+        return `${beginOfString}updated. From ${oldValueString} to ${newValueString}`;
+      },
+      deleted: () => {
+        const beginOfString = generateBeginOfString(keyString);
+        return `${beginOfString}removed`;
+      },
+      inserted: (diffNode) => {
+        const beginOfString = generateBeginOfString(keyString);
+        const valueString = chooseValueString(diffNode.value, 'withWord');
+        return `${beginOfString}added with ${valueString}`;
+      },
     };
     return diffString[diffElem.type](diffElem);
   };
 
   const diffStringArray = diff
-    .map(diffElem => diffToString(diffElem))
-    .filter(item => item !== 'Not changed');
+    .filter(diffElem => diffElem.type !== 'not changed')
+    .map(diffElem => diffToString(diffElem));
   return diffStringArray.join('\n');
 };
 
