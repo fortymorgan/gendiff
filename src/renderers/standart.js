@@ -7,12 +7,12 @@ const visualParams = {
 };
 
 const stringify = (value, spaceCount) => {
-  if (_.isObject(value)) {
-    const keys = _.keys(value);
-    const stringArray = keys.map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${value[key]}`);
-    return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
+  if (!_.isObject(value)) {
+    return value;
   }
-  return value;
+  const keys = _.keys(value);
+  const stringArray = keys.map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${value[key]}`);
+  return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
 };
 
 const standartRender = (diff, spaceCount = visualParams.spaceCount) => {
