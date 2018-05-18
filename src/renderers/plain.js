@@ -13,12 +13,13 @@ const chooseValueString = (value, sample) => {
 const plainRender = (diff, acc = []) => {
   const diffToString = (diffElem) => {
     const diffString = {
+      nested: diffNode => plainRender(diffNode.children, [...acc, diffNode.key]),
       'not changed': () => 'Not changed',
-      changed: value => `${generateBeginOfString([...acc, diffElem.key])}updated. From ${chooseValueString(value.oldValue, 'simple')} to ${chooseValueString(value.newValue, 'simple')}`,
-      deleted: () => `${generateBeginOfString([...acc, diffElem.key])}removed`,
-      inserted: value => `${generateBeginOfString([...acc, diffElem.key])}added with ${chooseValueString(value, 'withWord')}`,
+      changed: diffNode => `${generateBeginOfString([...acc, diffNode.key])}updated. From ${chooseValueString(diffNode.value.oldValue, 'simple')} to ${chooseValueString(diffNode.value.newValue, 'simple')}`,
+      deleted: diffNode => `${generateBeginOfString([...acc, diffNode.key])}removed`,
+      inserted: diffNode => `${generateBeginOfString([...acc, diffNode.key])}added with ${chooseValueString(diffNode.value, 'withWord')}`,
     };
-    return diffElem.type === 'nested' ? plainRender(diffElem.children, [...acc, diffElem.key]) : diffString[diffElem.type](diffElem.value);
+    return diffString[diffElem.type](diffElem);
   };
 
   const diffStringArray = diff

@@ -15,24 +15,32 @@ const stringify = (value, spaceCount) => {
   return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
 };
 
-const standartRender = (diff, spaceCount = visualParams.spaceCount) => {
+const standartRender = (diff, parentName = '', spaceCount = visualParams.spaceCount) => {
   const diffToString = (diffElem) => {
-    const formDiffString = (value, diffSign) => `${' '.repeat(spaceCount)}${diffSign} ${diffElem.key}: ${stringify(value, spaceCount)}`;
-
-    const diffString = {
-      nested: children => formDiffString(standartRender(children, spaceCount + visualParams.innerObjSpace), ' '),
-      'not changed': value => formDiffString(value, ' '),
-      changed: value => [formDiffString(value.oldValue, '-'), formDiffString(value.newValue, '+')],
-      deleted: value => formDiffString(value, '-'),
-      inserted: value => formDiffString(value, '+'),
+    const formDiffString = (value, diffSign) => {
+      const valueString = stringify(value, spaceCount);
+      return `${' '.repeat(spaceCount)}${diffSign} ${diffElem.key}: ${valueString}`;
     };
 
-    return diffElem.type === 'nested' ? diffString.nested(diffElem.children) : diffString[diffElem.type](diffElem.value);
+    const diffString = {
+      nested: (diffNode) => {
+        const newParentName = `${' '.repeat(spaceCount)}  ${diffNode.key}: `;
+        const newSpaceCount = spaceCount + visualParams.innerObjSpace;
+        return standartRender(diffNode.children, newParentName, newSpaceCount);
+      },
+      'not changed': diffNode => formDiffString(diffNode.value, ' '),
+      changed: diffNode => [formDiffString(diffNode.value.oldValue, '-'),
+        formDiffString(diffNode.value.newValue, '+')],
+      deleted: diffNode => formDiffString(diffNode.value, '-'),
+      inserted: diffNode => formDiffString(diffNode.value, '+'),
+    };
+
+    return diffString[diffElem.type](diffElem);
   };
 
   const diffStringArray = diff.map(diffElem => diffToString(diffElem));
   const diffFlatArr = _.flatten(diffStringArray);
-  return `{\n${diffFlatArr.join('\n')}\n${' '.repeat(spaceCount - visualParams.outerObjSpace)}}`;
+  return `${parentName}{\n${diffFlatArr.join('\n')}\n${' '.repeat(spaceCount - visualParams.outerObjSpace)}}`;
 };
 
 export default standartRender;
