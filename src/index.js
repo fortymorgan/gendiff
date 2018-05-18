@@ -21,7 +21,7 @@ const diffTypes = [
     check: (firstConfig, secondConfig, key) => (_.has(firstConfig, key) && _.has(secondConfig, key)
       && (firstConfig[key] !== secondConfig[key])),
     process: (firstConfig, secondConfig) =>
-      ({ value: { oldValue: firstConfig, newValue: secondConfig } }),
+      ({ oldValue: firstConfig, newValue: secondConfig }),
   },
   {
     type: 'deleted',

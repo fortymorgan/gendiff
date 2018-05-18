@@ -30,8 +30,8 @@ const render = (diff, parentName = '', spaceCount = visualParams.spaceCount) => 
         return render(diffNode.children, newParentName, newSpaceCount);
       },
       'not changed': diffNode => formDiffString(diffNode.value, ' '),
-      changed: diffNode => [formDiffString(diffNode.value.oldValue, '-'),
-        formDiffString(diffNode.value.newValue, '+')],
+      changed: diffNode => [formDiffString(diffNode.oldValue, '-'),
+        formDiffString(diffNode.newValue, '+')],
       deleted: diffNode => formDiffString(diffNode.value, '-'),
       inserted: diffNode => formDiffString(diffNode.value, '+'),
     };

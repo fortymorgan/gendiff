@@ -15,7 +15,7 @@ const render = (diff, acc = []) => {
     const diffString = {
       nested: diffNode => render(diffNode.children, [...acc, diffNode.key]),
       'not changed': () => 'Not changed',
-      changed: diffNode => `${generateBeginOfString([...acc, diffNode.key])}updated. From ${chooseValueString(diffNode.value.oldValue, 'simple')} to ${chooseValueString(diffNode.value.newValue, 'simple')}`,
+      changed: diffNode => `${generateBeginOfString([...acc, diffNode.key])}updated. From ${chooseValueString(diffNode.oldValue, 'simple')} to ${chooseValueString(diffNode.newValue, 'simple')}`,
       deleted: diffNode => `${generateBeginOfString([...acc, diffNode.key])}removed`,
       inserted: diffNode => `${generateBeginOfString([...acc, diffNode.key])}added with ${chooseValueString(diffNode.value, 'withWord')}`,
     };
