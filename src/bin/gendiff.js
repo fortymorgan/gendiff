@@ -4,7 +4,7 @@ import program from 'commander';
 import genearateDiff from '..';
 
 program
-  .version('1.6.1', '-v, --version')
+  .version('1.6.2', '-v, --version')
   .description('Compares two configuration files and shows a difference.')
   .option('-f, --format [type]', 'Output format')
   .arguments('<firstConfig> <secondConfig>')
