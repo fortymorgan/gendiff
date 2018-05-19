@@ -1,33 +1,26 @@
 import _ from 'lodash';
 
-const visualParams = {
-  innerObjSpace: 4,
-  outerObjSpace: 2,
-  spaceCount: 2,
-};
-
-const stringify = (value, spaceCount) => {
+const stringify = (value, depth) => {
   if (!_.isObject(value)) {
     return value;
   }
   const keys = _.keys(value);
   const stringArray = keys
-    .map(key => `${' '.repeat(spaceCount + visualParams.innerObjSpace)}  ${key}: ${value[key]}`);
-  return `{\n${stringArray.join('\n')}\n${' '.repeat(spaceCount + visualParams.outerObjSpace)}}`;
+    .map(key => `${' '.repeat(depth * 4)}${key}: ${value[key]}`);
+  return `{\n${stringArray.join('\n')}\n${' '.repeat((depth * 4) - 4)}}`;
 };
 
-const render = (diff, parentName = '', spaceCount = visualParams.spaceCount) => {
+const render = (diff, parentName = '', depth = 1) => {
   const diffToString = (diffElem) => {
     const formDiffString = (value, diffSign) => {
-      const valueString = stringify(value, spaceCount);
-      return `${' '.repeat(spaceCount)}${diffSign} ${diffElem.key}: ${valueString}`;
+      const valueString = stringify(value, depth + 1);
+      return `${' '.repeat((depth * 4) - 2)}${diffSign} ${diffElem.key}: ${valueString}`;
     };
 
     const diffString = {
       nested: (diffNode) => {
-        const newParentName = `${' '.repeat(spaceCount)}  ${diffNode.key}: `;
-        const newSpaceCount = spaceCount + visualParams.innerObjSpace;
-        return render(diffNode.children, newParentName, newSpaceCount);
+        const newParentName = `${' '.repeat((depth * 4) - 2)}  ${diffNode.key}: `;
+        return render(diffNode.children, newParentName, depth + 1);
       },
       'not changed': diffNode => formDiffString(diffNode.value, ' '),
       changed: (diffNode) => {
@@ -44,7 +37,7 @@ const render = (diff, parentName = '', spaceCount = visualParams.spaceCount) => 
 
   const diffStringArray = diff.map(diffElem => diffToString(diffElem));
   const diffFlatArr = _.flatten(diffStringArray);
-  return `${parentName}{\n${diffFlatArr.join('\n')}\n${' '.repeat(spaceCount - visualParams.outerObjSpace)}}`;
+  return `${parentName}{\n${diffFlatArr.join('\n')}\n${' '.repeat((depth * 4) - 4)}}`;
 };
 
 export default render;
