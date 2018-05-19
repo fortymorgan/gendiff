@@ -1,6 +1,6 @@
 {
   "name": "gendiff-s257",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Compares two configuration files and shows a difference.",
   "main": "index.js",
   "jest": {
