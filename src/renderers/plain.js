@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-const generateBeginOfString = key => `Property '${key}' was `;
-
 const chooseValueString = (value, sample) => {
   const samples = {
     simple: `'${value}'`,
@@ -14,20 +12,16 @@ const render = (diff, acc = []) => {
   const diffToString = (diffElem) => {
     const keyAcc = [...acc, diffElem.key];
     const keyString = keyAcc.join('.');
+    const beginOfString = `Property '${keyString}' was `;
     const diffString = {
       nested: diffNode => render(diffNode.children, keyAcc),
       changed: (diffNode) => {
-        const beginOfString = generateBeginOfString(keyString);
         const oldValueString = chooseValueString(diffNode.oldValue, 'simple');
         const newValueString = chooseValueString(diffNode.newValue, 'simple');
         return `${beginOfString}updated. From ${oldValueString} to ${newValueString}`;
       },
-      deleted: () => {
-        const beginOfString = generateBeginOfString(keyString);
-        return `${beginOfString}removed`;
-      },
+      deleted: () => `${beginOfString}removed`,
       inserted: (diffNode) => {
-        const beginOfString = generateBeginOfString(keyString);
         const valueString = chooseValueString(diffNode.value, 'withWord');
         return `${beginOfString}added with ${valueString}`;
       },
