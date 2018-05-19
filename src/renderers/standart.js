@@ -12,7 +12,7 @@ const stringify = (value, depth) => {
 
 const render = (diff, parentName = '', depth = 1) => {
   const diffToString = (diffElem) => {
-    const formDiffString = (value, diffSign) => {
+    const prettifyDiffString = (value, diffSign) => {
       const valueString = stringify(value, depth + 1);
       return `${' '.repeat((depth * 4) - 2)}${diffSign} ${diffElem.key}: ${valueString}`;
     };
@@ -22,14 +22,14 @@ const render = (diff, parentName = '', depth = 1) => {
         const newParentName = `${' '.repeat((depth * 4) - 2)}  ${diffNode.key}: `;
         return render(diffNode.children, newParentName, depth + 1);
       },
-      'not changed': diffNode => formDiffString(diffNode.value, ' '),
+      'not changed': diffNode => prettifyDiffString(diffNode.value, ' '),
       changed: (diffNode) => {
-        const diffDeleted = formDiffString(diffNode.oldValue, '-');
-        const diffInserted = formDiffString(diffNode.newValue, '+');
+        const diffDeleted = prettifyDiffString(diffNode.oldValue, '-');
+        const diffInserted = prettifyDiffString(diffNode.newValue, '+');
         return [diffDeleted, diffInserted];
       },
-      deleted: diffNode => formDiffString(diffNode.value, '-'),
-      inserted: diffNode => formDiffString(diffNode.value, '+'),
+      deleted: diffNode => prettifyDiffString(diffNode.value, '-'),
+      inserted: diffNode => prettifyDiffString(diffNode.value, '+'),
     };
 
     return diffString[diffElem.type](diffElem);
