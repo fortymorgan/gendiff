@@ -8,7 +8,7 @@ Console-based Node.js app for generating diff between config files. Supported fo
 
 ### Config files
 
-Before:
+First config:
 ```
 {
   "host": "hexlet.io",
@@ -17,7 +17,7 @@ Before:
 }
 ```
 
-After:
+Second config:
 ```
 {
   "timeout": 20,
@@ -81,7 +81,7 @@ npm install -g gendiff-s257
 ```
 
 ## How to use
-Usage:
+### Usage
 ```
 gendiff [options] <firstConfig> <secondConfig>
 ```
