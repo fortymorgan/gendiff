@@ -73,17 +73,18 @@ JSON format:
 ]
 ```
 
-## How to install
+## How to develop
 
-To install run in console:
+Fist you need to build app with:
 ```
-npm install -g gendiff-s257
+npm run build
 ```
 
-## How to use
+Then you can run app:
+
 ### Usage
 ```
-gendiff [options] <firstConfig> <secondConfig>
+dist/bin/gendiff.js [options] <firstConfig> <secondConfig>
 ```
 
 ### Options
@@ -97,3 +98,11 @@ gendiff [options] <firstConfig> <secondConfig>
 - `standart`, output diff with `+ / -` , like `git diff`
 - `plain`, output diff as text strings
 - `json`, output diff in JSON format
+
+## Testing
+
+Run tests with:
+```
+npm test
+```
+Config files and results for tests in `__tests__/__fixtures__`.
