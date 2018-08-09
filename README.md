@@ -6,8 +6,8 @@ Console-based Node.js app for generating diff between config files. Supported fo
 
 ## How it works
 
-The application detects file format based on its extension. It converts config to an object structure, same for different formats.  
-Then the app creates diff (AST) between the files with a [recursive function](https://github.com/fortymorgan/gendiff/blob/8ce34d2589c7f7a20ca3263f4360f7bcb3296375/src/index.js#L40). Finally, the app renders diff in the selected `format` to the console.
+The application detects file format based on its extension. It converts config to an object structure (AST), same for different formats.  
+Then the app creates a diff by comparing the ASTs recursively with a [function](https://github.com/fortymorgan/gendiff/blob/8ce34d2589c7f7a20ca3263f4360f7bcb3296375/src/index.js#L40). Finally, the app renders diff in the selected `format` to the console.
 
 ## Examples
 
